@@ -23,23 +23,18 @@ LETTERS = [
 
 for d in tqdm(data):
     clues_raw, signal_raw = d.split(" | ")
-    clues = clues_raw.split()
-    signal = signal_raw.split()
-    sorted_clues = [sorted(x) for x in clues]
-    sorted_signal = [sorted(x) for x in signal]
+    clues = [sorted(x) for x in clues_raw.split()]
+    signal = [sorted(x) for x in signal_raw.split()]
     for x in signal:
         if len(x) in [2, 3, 4, 7]:
             pt1 += 1
     for layout in permutations("abcdefg"):
-        sorted_strs = [ 
+        wires = [ 
             sorted(layout[val] for val in letter)
             for letter in LETTERS
         ]
-        if all(s in sorted_clues for s in sorted_strs):
-            pt2 += int("".join(
-                str(sorted_strs.index(sig))
-                for sig in sorted_signal
-            ))
+        if all(s in clues for s in wires):
+            pt2 += int("".join(str(wires.index(sig)) for sig in signal))
             break
     
 print(pt1)
