@@ -18,13 +18,12 @@ pt2 = []
 for line in data:
     stack = []
     for char in line:
-        try:  # close
-            opener = openers[char]
-            if not stack or stack[-1] != opener:
+        if char in openers:
+            if not stack or stack[-1] != openers[char]:
                 pt1 += scores[char]
                 break
             stack.pop(-1)
-        except KeyError:
+        else:
             stack.append(char)
     else:  # not corrupted; pt2
         line_total = 0
