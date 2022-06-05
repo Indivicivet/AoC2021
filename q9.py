@@ -19,19 +19,16 @@ print(np.sum(1 + data[data < minimum_filter(
 )]))
 
 
-in_basin = data < 9
-
-
 def traverse(j0, i0):
     if (
         j0 < 0
         or i0 < 0
-        or j0 >= in_basin.shape[0]
-        or i0 >= in_basin.shape[1]
-        or not in_basin[j0, i0]
+        or j0 >= data.shape[0]
+        or i0 >= data.shape[1]
+        or data[j0, i0] == 9
     ):
         return 0
-    in_basin[j0, i0] = False  # traverse
+    data[j0, i0] = 9  # traverse
     return 1 + sum(
         traverse(j0 + dj, i0 + di)
         for di, dj in [(-1, 0), (1, 0), (0, 1), (0, -1)]
