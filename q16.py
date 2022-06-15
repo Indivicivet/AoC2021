@@ -9,14 +9,14 @@ b = "".join(
 
 
 def recursive_decode(ptr):
-    """returns (new ptr, val, total version)"""
+    """returns (new ptr, val, version numbers)"""
 
     def take(n):
         nonlocal ptr
         ptr += n
         return int(b[ptr - n:ptr], base=2)
 
-    version = take(3)
+    versions = [take(3)]
     type_id = take(3)
     if type_id == 4:  # literal
         val = 0
@@ -26,7 +26,7 @@ def recursive_decode(ptr):
             val += take(4)
             if terminate:
                 break
-        return ptr, val, version
+        return ptr, val, versions
     # operator
     if take(1):  # next11 = num subpackets
         subs_length = 99999
@@ -37,14 +37,14 @@ def recursive_decode(ptr):
     subs = []
     ptr0 = ptr
     for _ in range(n_subs):
-        new_ptr, sub_val, sub_version = recursive_decode(ptr)
+        new_ptr, sub_val, sub_versions = recursive_decode(ptr)
         ptr = new_ptr
         subs.append(sub_val)
-        version += sub_version
+        versions += sub_versions
         if ptr - ptr0 >= subs_length:
             break
-    return ptr, None, version
+    return ptr, None, versions
 
 
-_, _, pt1 = recursive_decode(0)
-print(pt1)
+_, _, versions = recursive_decode(0)
+print(sum(versions))
