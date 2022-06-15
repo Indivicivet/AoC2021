@@ -29,18 +29,19 @@ def recursive_decode(ptr):
         return ptr, val, version
     # operator
     if take(1):  # next11 = num subpackets
-        sub_length = 99999
+        subs_length = 99999
         n_subs = take(11)
     else:  # next 15
-        sub_length = take(15)
+        subs_length = take(15)
         n_subs = 99999
     subs = []
     ptr0 = ptr
     for _ in range(n_subs):
-        ptr, val, total_sub_version = recursive_decode(ptr)
-        subs.append(val)
-        version += total_sub_version
-        if ptr - ptr0 >= sub_length:
+        new_ptr, sub_val, sub_version = recursive_decode(ptr)
+        ptr = new_ptr
+        subs.append(sub_val)
+        version += sub_version
+        if ptr - ptr0 >= subs_length:
             break
     return ptr, None, version
 
