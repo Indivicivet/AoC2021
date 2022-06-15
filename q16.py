@@ -1,4 +1,6 @@
+import math
 from pathlib import Path
+
 
 data = Path("input_q16.txt").read_text().strip()
 
@@ -6,6 +8,17 @@ b = "".join(
     f"{int(x, base=16):04b}"
     for x in data
 )
+
+
+OPERATORS = {
+    0: sum,
+    1: math.prod,
+    2: min,
+    3: max,
+    5: lambda x: x[0] > x[1],
+    6: lambda x: x[0] < x[1],
+    7: lambda x: x[0] == x[1],
+}
 
 
 def recursive_decode(ptr):
@@ -43,8 +56,9 @@ def recursive_decode(ptr):
         versions += sub_versions
         if ptr - ptr0 >= subs_length:
             break
-    return ptr, None, versions
+    return ptr, OPERATORS[type_id](subs), versions
 
 
-_, _, versions = recursive_decode(0)
+_, res, versions = recursive_decode(0)
 print(sum(versions))
+print(res)
