@@ -80,3 +80,9 @@ for nxt in snailfishes[1:]:
     current = add(current, nxt)
 
 print(magnitude(current))
+print(max(
+    magnitude(add(a, b))
+    for a in snailfishes
+    for b in snailfishes
+    if a != b
+))
